@@ -1,0 +1,7 @@
+pip install openai
+pip install python-dotenv
+pip install azure-ai-documentintelligence
+pip install azure-identity
+pip install azure-ai-projects
+pip install pandas
+pip install openpyxl
