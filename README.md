@@ -1,12 +1,113 @@
-Questo progetto implementa una pipeline intelligente per l'automazione del processo di acquisizione e gestione degli ordini in ambito manifatturiero, con l'obiettivo di ridurre i tempi di elaborazione, minimizzare gli errori di inserimento e ottimizzare i costi operativi.
-La soluzione è stata sviluppata utilizzando Python, Azure AI Document Intelligence, Azure AI Foundry, Microsoft Fabric, PySpark e Power BI, combinando un approccio deterministico con l'intelligenza artificiale generativa.
-L'architettura prevede l'utilizzo di Azure AI Document Intelligence per l'estrazione strutturata del contenuto dei documenti PDF, evitando di demandare questa attività agli LLM e riducendo tempi di elaborazione e costi.
-Il flusso applicativo è coordinato da un orchestratore deterministico sviluppato in Python, che gestisce l'attivazione di quattro agenti AI specializzati in base alla tipologia di richiesta:
-Request Router: identifica la tipologia di documento e instrada il flusso.
-Order Extractor: estrae e struttura le informazioni dell'ordine.
-Review Assistant: analizza le anomalie riscontrate e propone possibili correzioni a supporto dell'operatore.
-Commercial Responder: gestisce le richieste commerciali e genera una risposta strutturata.
-Gli ordini estratti vengono sottoposti a una validazione deterministica, che verifica automaticamente la coerenza di clienti, articoli, prezzi, quantità e dati storici aziendali. Gli ordini conformi vengono esportati in formato JSON e successivamente convertiti in CSV per essere elaborati all'interno di Microsoft Fabric secondo un'architettura Medallion (Bronze, Silver e Gold).
-Gli ordini che presentano anomalie non vengono modificati automaticamente: il sistema genera un file JSON contenente gli errori individuati, i warning, una spiegazione delle criticità e una proposta di correzione elaborata dall'AI, lasciando la decisione finale all'operatore umano.
-L'applicazione monitora inoltre il numero di token e il costo associato a ogni chiamata agli agenti AI, consentendo un controllo puntuale delle risorse utilizzate e ottimizzando l'attivazione degli agenti in funzione della richiesta ricevuta.
-L'obiettivo del progetto è dimostrare come un'architettura ibrida, composta da componenti deterministiche e agenti AI specializzati, possa automatizzare il processo di Order Intake garantendo precisione, scalabilità, controllo dei costi e supervisione umana nei casi più critici.
+# 🤖 Intelligent Order Intake Pipeline
+
+Pipeline intelligente per l'automazione del processo di acquisizione ordini in ambito manifatturiero.
+
+Il progetto utilizza **Azure AI Foundry**, **Azure AI Document Intelligence**, **Python** e **Microsoft Fabric** per trasformare documenti PDF in dati strutturati pronti per l'analisi.
+
+---
+
+## 🚀 Tecnologie
+
+- 🐍 Python
+- 🤖 Azure AI Foundry
+- 📄 Azure AI Document Intelligence
+- ☁️ Microsoft Fabric
+- ⚡ PySpark
+- 📊 Power BI
+- 🗄️ SQL
+- 📁 JSON / CSV
+
+---
+
+## 🎯 Obiettivo
+
+Ridurre tempi, errori e costi del processo di Order Intake attraverso una pipeline intelligente che:
+
+- estrae automaticamente gli ordini dai PDF;
+- valida clienti, articoli e prezzi;
+- supporta l'operatore nelle revisioni;
+- esporta i dati verso Microsoft Fabric.
+
+---
+
+## 🏗️ Architettura
+
+```text
+PDF
+ │
+ ▼
+Azure AI Document Intelligence
+ │
+ ▼
+Deterministic Orchestrator
+ │
+ ├── Request Router
+ ├── Order Extractor
+ ├── Review Assistant
+ └── Commercial Responder
+ │
+ ▼
+Order Validator
+ │
+ ├── ✅ Validated Orders (.json → .csv)
+ └── ⚠️ Orders to Review (.json)
+             │
+             ▼
+      Human Validation
+```
+
+---
+
+## ⚙️ Workflow
+
+1. 📄 Lettura del PDF tramite Azure AI Document Intelligence
+2. 🧭 Classificazione della richiesta
+3. 🤖 Attivazione dei soli agenti necessari
+4. ✔️ Validazione deterministica
+5. 📁 Esportazione:
+   - JSON + CSV per ordini validati
+   - JSON con suggerimenti AI per ordini da revisionare
+6. ☁️ Caricamento su Microsoft Fabric
+
+---
+
+## 🧠 Agenti AI
+
+| Agente | Funzione |
+|---------|----------|
+| 🧭 Request Router | Classifica il documento |
+| 📦 Order Extractor | Estrae i dati dell'ordine |
+| 🔍 Review Assistant | Analizza anomalie e propone correzioni |
+| 💼 Commercial Responder | Gestisce richieste commerciali |
+
+---
+
+## 💰 Ottimizzazione dei costi
+
+✔ Monitoraggio di input/output token
+
+✔ Calcolo del costo per ogni chiamata
+
+✔ Attivazione solo degli agenti necessari
+
+✔ Orchestrazione deterministica
+
+---
+
+## 📊 Output
+
+```
+output/
+├── ORDINE_VALIDATO/
+│   ├── risultato.json
+│   └── risultato.csv
+│
+└── RICHIESTA_REVISIONE/
+    └── risultato.json
+```
+
+---
+
+## 👨‍💻 Autore
+
+**Roberto Iovino**
